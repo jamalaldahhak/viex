@@ -29,14 +29,14 @@ export const createStudentSchema = z.object({
 
 export const createTeacherSchema = z.object({
   ...commonFields,
-  salary: z.coerce.number().finite().min(0),
+  salary: z.coerce.number().min(0),
   specialization: z.string().trim().min(2).max(150),
   certificateImage: z.string().trim().min(1).max(1000),
 });
 
 export const createEmployeeSchema = z.object({
   ...commonFields,
-  salary: z.coerce.number().finite().min(0),
+  salary: z.coerce.number().min(0),
   address: z.string().trim().min(3).max(300),
   identityImage: z.string().trim().min(1).max(1000),
 });
