@@ -7,7 +7,24 @@ import Role from "../models/Role.js";
 import Permission from "../models/Permission.js";
 import UserRole from "../models/UserRole.js";
 import RolePermission from "../models/RolePermission.js";
-
+const permissionsToCreate = [
+  {
+    name: "invoices.create",
+    description: "Create invoices",
+  },
+  {
+    name: "invoices.read",
+    description: "View invoices",
+  },
+  {
+    name: "invoices.update",
+    description: "Update invoices",
+  },
+  {
+    name: "invoices.delete",
+    description: "Delete invoices",
+  },
+];
 const requiredEnv = [
   "MONGODB_URI",
   "ADMIN_NAME",

@@ -1,4 +1,4 @@
-
+import invoiceRoutes from "../Routers/invoiceRoutes.js";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -34,7 +34,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1", userRoutes);
 app.use("/api/v1/courses", courseRoutes);
 app.use("/api/v1/quizzes", quizRoutes);
-
+app.use("/api/v1/invoices", invoiceRoutes);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
