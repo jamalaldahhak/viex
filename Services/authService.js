@@ -252,32 +252,57 @@ export async function logout(rawToken) {
 
 export async function getCurrentUser(userId) {
   const user = await userRepository.findById(userId);
-
+  console.log(user);
   if (!user || !user.isActive) {
-    throw createError("User not found or inactive", 401);
+    const error = new Error("User not found or inactive");
+    error.status = 401;
+    throw error;
   }
 
-  const session = await createSessionData(user);
-
-  const [studentProfile, teacherProfile, employeeProfile] =
-    await Promise.all([
-      profileRepository.findStudentProfile(user._id),
-      profileRepository.findTeacherProfile(user._id),
-      profileRepository.findEmployeeProfile(user._id),
-    ]);
-
-  let profile = null;
-
-  if (studentProfile) {
-    profile = { type: "student", ...studentProfile.toObject() };
-  } else if (teacherProfile) {
-    profile = { type: "teacher", ...teacherProfile.toObject() };
-  } else if (employeeProfile) {
-    profile = { type: "employee", ...employeeProfile.toObject() };
-  }
+  const [permissions, userRoles] = await Promise.all([
+    permissionService.getEffectivePermissions(userId),
+    userRoleService.getUserRoles(userId),
+  ]);
 
   return {
-    ...session,
-    profile,
+    user: {
+      id: user._id.toString(),
+      full_name: user.full_name,
+      email: user.email,
+    },
+    roles: userRoles.map((role) => role.name),
+    permissions,
   };
 }
+
+// export async function getCurrentUser(userId) {
+//   const user = await userRepository.findById(userId);
+
+//   if (!user || !user.isActive) {
+//     throw createError("User not found or inactive", 401);
+//   }
+
+//   const session = await createSessionData(user);
+
+//   const [studentProfile, teacherProfile, employeeProfile] =
+//     await Promise.all([
+//       profileRepository.findStudentProfile(user._id),
+//       profileRepository.findTeacherProfile(user._id),
+//       profileRepository.findEmployeeProfile(user._id),
+//     ]);
+
+//   let profile = null;
+
+//   if (studentProfile) {
+//     profile = { type: "student", ...studentProfile.toObject() };
+//   } else if (teacherProfile) {
+//     profile = { type: "teacher", ...teacherProfile.toObject() };
+//   } else if (employeeProfile) {
+//     profile = { type: "employee", ...employeeProfile.toObject() };
+//   }
+
+//   return {
+//     ...session,
+//     profile,
+//   };
+// }

@@ -5,7 +5,7 @@ import {
   createTeacherSchema,
   createEmployeeSchema,
 } from "../Validation/userValidator.js";
-
+import {getCurrentUser} from "../services/authService.js";
 function createHandler(schema, serviceMethod, message) {
   return async function (req, res, next) {
     try {
@@ -55,3 +55,21 @@ export const createEmployee = createHandler(
   userService.createEmployee,
   "Employee created successfully"
 );
+
+export async function me(req, res, next) {
+  try {
+    console.log("Authenticated user ID:", req.user?.id);
+
+    const data = await getCurrentUser(req.user.id);
+
+    console.log("Current user data:", data);
+
+    return res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    console.error("ME endpoint error:", error);
+    next(error);
+  }
+}
