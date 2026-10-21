@@ -29,6 +29,9 @@ export const PERMISSION_CATALOG = [
   { name: "courses.update", description: "Update courses" },
   { name: "courses.delete", description: "Delete courses" },
 
+  // Quizzes
+  { name: "quizzes.create", description: "Create quizzes" },
+
   // Attendance
   { name: "attendance.view", description: "View attendance" },
   { name: "attendance.create", description: "Record attendance" },
