@@ -7,6 +7,7 @@ import {
   getCourses,
   updateCourse,
 } from "../Controllers/courseController.js";
+import { createQuiz } from "../Controllers/quizController.js";
 import { authenticateToken } from "../Middlewares/authenticateToken.js";
 import { authorize } from "../Middlewares/authorize.js";
 
@@ -24,5 +25,9 @@ router
   .get(authorize("courses.view"), getCourseById)
   .patch(authorize("courses.update"), updateCourse)
   .delete(authorize("courses.delete"), deleteCourse);
+
+router
+  .route("/:courseId/quizzes")
+  .post(authorize("quizzes.create"), createQuiz);
 
 export default router;
