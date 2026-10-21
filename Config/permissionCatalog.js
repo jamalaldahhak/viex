@@ -30,7 +30,12 @@ export const PERMISSION_CATALOG = [
   { name: "courses.delete", description: "Delete courses" },
 
   // Quizzes
+  { name: "quizzes.view", description: "View quizzes" },
   { name: "quizzes.create", description: "Create quizzes" },
+  { name: "quizzes.update", description: "Update quizzes" },
+  { name: "quizzes.delete", description: "Delete quizzes" },
+  { name: "quizzes.submit", description: "Submit quiz answers" },
+  { name: "course_students.manage", description: "Manage course student enrollments" },
 
   // Attendance
   { name: "attendance.view", description: "View attendance" },
@@ -61,6 +66,8 @@ export const DEFAULT_ROLE_PERMISSIONS = {
     "profile.view_own",
     "profile.update_own",
     "courses.view_own",
+    "quizzes.view",
+    "quizzes.submit",
     "attendance.view_own",
     "payments.view_own",
   ],
@@ -70,6 +77,10 @@ export const DEFAULT_ROLE_PERMISSIONS = {
     "profile.update_own",
     "teacher.courses.view_assigned",
     "teacher.attendance.manage_assigned",
+    "quizzes.view",
+    "quizzes.create",
+    "quizzes.update",
+    "quizzes.delete",
   ],
 
   employee: [],

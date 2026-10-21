@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "../routers/authRoutes.js";
 import userRoutes from "../routers/userRoutes.js";
 import courseRoutes from "../routers/courseRoutes.js";
+import quizRoutes from "../Routers/quizRoutes.js";
 import {
   notFoundHandler,
   errorHandler,
@@ -32,6 +33,7 @@ app.get("/api/v1/health", (req, res) => {
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1", userRoutes);
 app.use("/api/v1/courses", courseRoutes);
+app.use("/api/v1/quizzes", quizRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

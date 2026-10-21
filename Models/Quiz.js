@@ -18,9 +18,9 @@ const questionSchema = new mongoose.Schema(
       required: true,
       validate: {
         validator(choices) {
-          return choices.length >= 2;
+          return choices.length >= 2 && choices.length <= 6;
         },
-        message: "Each question must have at least 2 choices",
+        message: "Each question must have between 2 and 6 choices",
       },
     },
     correctAnswer: {
