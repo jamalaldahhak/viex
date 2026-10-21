@@ -40,14 +40,10 @@ function createAccessToken(user) {
     throw new Error("JWT_ACCESS_SECRET must be set to a strong secret");
   }
 
-  return jwt.sign(
-    { sub: user._id.toString() },
-    secret,
-    {
-      expiresIn: process.env.JWT_ACCESS_EXPIRES_IN || "15m",
-      algorithm: "HS256",
-    }
-  );
+  return jwt.sign({ sub: user._id.toString() }, secret, {
+    expiresIn: process.env.JWT_ACCESS_EXPIRES_IN || "15m",
+    algorithm: "HS256",
+  });
 }
 
 function hashRefreshToken(token) {
@@ -155,10 +151,7 @@ export async function register({
         await profileRepository.deleteStudentProfile(user._id);
 
         if (roleAssigned) {
-          await userRoleService.removeRoleFromUser(
-            user._id,
-            studentRole._id
-          );
+          await userRoleService.removeRoleFromUser(user._id, studentRole._id);
         }
 
         await refreshTokenRepository.revokeAllForUser(user._id);
@@ -177,8 +170,6 @@ export async function register({
 }
 
 export async function login({ email, password }) {
-
-  
   const user = await userRepository.findByEmail(email);
 
   if (!user || !(await bcrypt.compare(password, user.password))) {
@@ -203,15 +194,12 @@ export async function login({ email, password }) {
 }
 
 export async function refreshSession(rawToken) {
-  if (
-    typeof rawToken !== "string" ||
-    !/^[a-f0-9]{96}$/i.test(rawToken)
-  ) {
+  if (typeof rawToken !== "string" || !/^[a-f0-9]{96}$/i.test(rawToken)) {
     throw createError("Refresh token is invalid or expired", 401);
   }
 
   const oldToken = await refreshTokenRepository.revokeByHash(
-    hashRefreshToken(rawToken)
+    hashRefreshToken(rawToken),
   );
 
   if (!oldToken) {
@@ -238,16 +226,11 @@ export async function refreshSession(rawToken) {
 }
 
 export async function logout(rawToken) {
-  if (
-    typeof rawToken !== "string" ||
-    !/^[a-f0-9]{96}$/i.test(rawToken)
-  ) {
+  if (typeof rawToken !== "string" || !/^[a-f0-9]{96}$/i.test(rawToken)) {
     return;
   }
 
-  await refreshTokenRepository.revokeByHash(
-    hashRefreshToken(rawToken)
-  );
+  await refreshTokenRepository.revokeByHash(hashRefreshToken(rawToken));
 }
 
 export async function getCurrentUser(userId) {

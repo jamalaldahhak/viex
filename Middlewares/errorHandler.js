@@ -1,4 +1,3 @@
-
 export function notFoundHandler(req, res, next) {
   const error = new Error(`Route not found: ${req.method} ${req.originalUrl}`);
   error.status = 404;
@@ -6,25 +5,35 @@ export function notFoundHandler(req, res, next) {
   next(error);
 }
 
-export function errorHandler(error, req, res, next) {
+// Error-handling middleware must have four parameters: err, req, res, next.
+export const errorHandler = (err, req, res, next) => {
+  // Delegate if a response has already started; Express can handle the rest.
   if (res.headersSent) {
-    return next(error);
+    return next(err);
   }
 
-  const status = Number.isInteger(error.status)
-    && error.status >= 400
-    && error.status <= 599
-    ? error.status
-    : 500;
+  let statusCode = err.statusCode || err.status || 500;
+  let message = err.message || "Internal Server Error";
 
-  if (status >= 500) {
-    console.error(error);
+  // Handle common Mongoose errors with clearer HTTP status codes.
+  if (err.name === "CastError") {
+    statusCode = 400;
+    message = "Invalid ID format";
+  } else if (err.name === "ValidationError") {
+    statusCode = 400;
+    message = err.message;
+  } else if (err.code === 11000) {
+    statusCode = 409;
+    message = "A record with this value already exists";
+  } else if (statusCode >= 500) {
+    // Avoid exposing internal server details in production.
+    message =
+      process.env.NODE_ENV === "production"
+        ? "Internal Server Error"
+        : err.message || "Internal Server Error";
   }
-
-  return res.status(status).json({
+  res.status(statusCode).json({
     success: false,
-    message: status >= 500
-      ? "Internal server error"
-      : error.message,
+    message,
   });
-}
+};

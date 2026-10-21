@@ -1,4 +1,3 @@
-
 import * as userRepository from "../repositories/userRepository.js";
 import * as userRoleRepository from "../repositories/userRoleRepository.js";
 import * as rolePermissionRepository from "../repositories/rolePermissionRepository.js";
@@ -23,13 +22,10 @@ export async function getEffectivePermissions(userId) {
 
   // 2. Get permissions inherited from those roles.
   const rolePermissionIds =
-    await rolePermissionRepository.findPermissionIdsByRoleIds(
-      roleIds
-    );
+    await rolePermissionRepository.findPermissionIdsByRoleIds(roleIds);
 
   // 3. Get direct allow/deny rules for the user.
-  const directRules =
-    await userPermissionRepository.findRulesByUserId(userId);
+  const directRules = await userPermissionRepository.findRulesByUserId(userId);
 
   const allowedDirectly = new Set();
   const deniedDirectly = new Set();
@@ -40,10 +36,7 @@ export async function getEffectivePermissions(userId) {
     if (rule.effect === "deny") {
       deniedDirectly.add(permissionId);
       allowedDirectly.delete(permissionId);
-    } else if (
-      rule.effect === "allow" &&
-      !deniedDirectly.has(permissionId)
-    ) {
+    } else if (rule.effect === "allow" && !deniedDirectly.has(permissionId)) {
       allowedDirectly.add(permissionId);
     }
   }
@@ -60,9 +53,9 @@ export async function getEffectivePermissions(userId) {
   }
 
   // 6. Resolve IDs into permission names.
-  const permissions = await permissionRepository.findByIds(
-    [...effectivePermissionIds]
-  );
+  const permissions = await permissionRepository.findByIds([
+    ...effectivePermissionIds,
+  ]);
 
   return permissions.map((permission) => permission.name);
 }
@@ -70,9 +63,7 @@ export async function getEffectivePermissions(userId) {
 export async function hasPermission(userId, permissionName) {
   const permissions = await getEffectivePermissions(userId);
 
-  return permissions.includes(
-    permissionName.toLowerCase().trim()
-  );
+  return permissions.includes(permissionName.toLowerCase().trim());
 }
 
 export async function hasAllPermissions(userId, permissionNames) {
@@ -80,7 +71,7 @@ export async function hasAllPermissions(userId, permissionNames) {
   const permissionSet = new Set(permissions);
 
   return permissionNames.every((name) =>
-    permissionSet.has(name.toLowerCase().trim())
+    permissionSet.has(name.toLowerCase().trim()),
   );
 }
 
@@ -89,6 +80,6 @@ export async function hasAnyPermission(userId, permissionNames) {
   const permissionSet = new Set(permissions);
 
   return permissionNames.some((name) =>
-    permissionSet.has(name.toLowerCase().trim())
+    permissionSet.has(name.toLowerCase().trim()),
   );
 }
