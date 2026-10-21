@@ -1,7 +1,8 @@
 import User from "../models/User.js";
+import RefreshToken from "../models/RefreshToken.js";
 
 export async function create(data) {
-  return User.create(data);
+  return RefreshToken.create(data);
 }
 
 export async function findById(userId) {

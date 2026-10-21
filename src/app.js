@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 
 import authRoutes from "../routers/authRoutes.js";
+import userRoutes from "../routers/userRoutes.js";
 import {
   notFoundHandler,
   errorHandler,
@@ -26,6 +27,7 @@ app.get("/api/v1/health", (req, res) => {
 });
 
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1", userRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

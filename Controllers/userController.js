@@ -4,7 +4,7 @@ import {
   createStudentSchema,
   createTeacherSchema,
   createEmployeeSchema,
-} from "../validators/userValidator.js";
+} from "../Validation/userValidator.js";
 
 function createHandler(schema, serviceMethod, message) {
   return async function (req, res, next) {

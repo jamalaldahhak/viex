@@ -177,6 +177,8 @@ export async function register({
 }
 
 export async function login({ email, password }) {
+
+  
   const user = await userRepository.findByEmail(email);
 
   if (!user || !(await bcrypt.compare(password, user.password))) {
