@@ -86,6 +86,10 @@ async function createUserAndProfile({
       id: user._id.toString(),
       full_name: user.full_name,
       email: user.email,
+      userId: user.userId,
+      status: user.status,
+      father_number: user.father_number,
+      birthday: user.birthday,
       isActive: user.isActive,
       roles: [role.name],
     };
